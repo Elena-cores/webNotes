@@ -1,0 +1,154 @@
+
+preparar entorno: npm init -y
+ - para conseguir package.json
+
+tñnext: npm i express
+app.js
+
+const express = require('express');
+const app = express();
+const port = 3000;
+
+// Middleware para analizar el cuerpo del formulario (req.body)
+app.use(express.urlencoded({ extended: true }));
+
+// Ruta para servir la página HTML con el formulario
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+// Ruta para procesar el formulario cuando el botón es presionado
+app.post('/submit-form', (req, res) => {
+  // Aquí procesamos los datos que vienen del formulario
+  const nombre = req.body.nombre;
+  res.send(`Formulario enviado. Hola, ${nombre}!`);
+});
+
+// Iniciar el servidor
+app.listen(port, () => {
+  console.log(`Servidor escuchando en http://localhost:${port}`);
+});
+
+------------------
+Index.html
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario con Node.js</title>
+</head>
+<body>
+  <h1>Formulario de Ejemplo</h1>
+  <form action="/submit-form" method="POST">
+    <label for="nombre">Tu nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
+    <button type="submit">Enviar</button>
+  </form>
+</body>
+</html>
+
+para probar: 
+
+node app.js
+
+
+
+-------- OR ANOTHER WAY:
+ app.js
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const port = 3000;
+
+// Middleware para servir archivos estáticos y parsear formularios
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Ruta para servir el formulario
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/views/index.html');
+});
+
+// Ruta para manejar el envío del formulario
+app.post('/submit-form', (req, res) => {
+    const { nombre, email } = req.body;
+    res.send(`Formulario recibido:<br>Nombre: ${nombre}<br>Email: ${email}`);
+});
+
+// Inicia el servidor
+app.listen(port, () => {
+    console.log(`Servidor corriendo en http://localhost:${port}`);
+});
+
+
+Index.html:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario</title>
+</head>
+<body>
+    <h1>Formulario de ejemplo</h1>
+    <form id="miFormulario" action="/submit-form" method="POST">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+        
+        <button type="submit">Enviar</button>
+    </form>
+    
+    <script src="/script.js"></script>
+</body>
+</html>
+
+
+
+formulario-app/
+├── public/
+│   └── script.js   # Para tu JavaScript en el frontend
+├── views/
+│   └── index.html  # Página principal
+├── app.js          # Lógica del servidor
+├── package.json
+
+
+script.js: 
+// Capturamos el formulario
+const formulario = document.getElementById('miFormulario');
+
+// Escuchamos el evento de envío
+formulario.addEventListener('submit', (event) => {
+    event.preventDefault(); // Evita que la página se recargue
+
+    // Creamos un objeto con los datos del formulario
+    const datos = {
+        nombre: formulario.nombre.value,
+        email: formulario.email.value
+    };
+
+    // Enviamos los datos al servidor usando Fetch API
+    fetch('/submit-form', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(datos)
+    })
+    .then(response => response.text())
+    .then(data => {
+        // Mostramos la respuesta del servidor
+        document.body.innerHTML += `<p>${data}</p>`;
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+
+
+
