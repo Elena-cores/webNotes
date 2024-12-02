@@ -20,3 +20,7 @@ otro ejemplo. empezar con npm start:
 "scripts": {
   "start": "node ./bin/www"
 }
+
+-----------------------------
+ejemplo js en ejs: <script src="/javascripts/registro.js"></script> 
+antes de cerrar el body. si está en public/javascripts/registro.js
