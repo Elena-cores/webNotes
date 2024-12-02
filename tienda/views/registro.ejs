@@ -1,0 +1,13 @@
+<%- include("header", {}) %>
+<h1><%= title %></h1>
+<form method="post" action="/registro">
+    <label>Usuario:</label>
+    <input type="text" id="user" name="user1"><br>
+    <label>contraseña:</label>
+    <input type="password" id="pass1" name="contra1">
+    <br>
+    <label>Repite la contraseña:</label>
+    <input type="password" id="pass2" name="contra2">
+    <button type="submit">Submit</button>
+</form>
+<%- include("footer", {}) %>
