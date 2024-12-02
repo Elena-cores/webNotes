@@ -1,0 +1,22 @@
+1. como cambiar código para que app arranque con:  PORT=3200 npm start
+npm install cross-env --save-dev
+"scripts": {
+  "start": "cross-env PORT=3000 node app.js",
+  "start-3200": "cross-env PORT=3200 node app.js"} -> 
+
+
+O SOLO HACER: 	$env:PORT=3200; npm start
+
+//en Linux
+var PORT = process.env.PORT || 3000;
+
+// Escuchar en el puerto
+server.listen(PORT, () => {
+  console.log(`Servidor escuchando en http://localhost:${PORT}`);
+});
+
+otro ejemplo. empezar con npm start: 
+
+"scripts": {
+  "start": "node ./bin/www"
+}
